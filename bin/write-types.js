@@ -19,7 +19,7 @@ Object(async () => {
         } else if (entry["@type"] === "rdfs:Class") {
             classes[stripSchemaPath(entry["@id"])] = {
                 metadata: {
-                    allowAdditionalPropeties: false,
+                    allowAdditionalProperties: false,
                     help: entry["rdfs:comment"],
                     "@id": entry["@id"],
                     name: entry["rdfs:label"],
