@@ -1,5 +1,5 @@
 const { readJson, writeFile, ensureDir } = require("fs-extra");
-const { flattenDeep, orderBy, has } = require("lodash");
+const { flattenDeep, orderBy, has, isArray } = require("lodash");
 const path = require("path");
 
 const schema = "schema.org.jsonld";
@@ -23,7 +23,11 @@ Object(async () => {
                     help: entry["rdfs:comment"],
                     "@id": entry["@id"],
                     name: entry["rdfs:label"],
-                    subClassOf: entry["rdfs:subClassOf"],
+                    subClassOf: isArray(entry["rdfs:subClassOf"])
+                        ? entry["rdfs:subClassOf"].map((e) =>
+                              stripSchemaPath(e["@id"])
+                          )
+                        : [stripSchemaPath(entry["@id"])],
                 },
                 inputs: [],
                 linksTo: [],
