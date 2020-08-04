@@ -3,5 +3,5 @@
 curl --silent --output schema.org.jsonld https://schema.org/version/latest/schemaorg-current-http.jsonld
 node write-types.js
 rm schema.org.jsonld
-cp types/index.json ../src/components/profiles/default
+cp types/index.json ../src/components/profiles/type-definitions.json
 rm -rf types
