@@ -1,5 +1,5 @@
 const { readJson, writeFile, ensureDir } = require("fs-extra");
-const { flattenDeep, orderBy, has, isArray } = require("lodash");
+const { flattenDeep, orderBy, has, isArray, uniq } = require("lodash");
 const path = require("path");
 
 const schema = "schema.org.jsonld";
@@ -17,17 +17,21 @@ Object(async () => {
         if (entry["@type"] === "rdf:Property") {
             properties.push(entry);
         } else if (entry["@type"] === "rdfs:Class") {
+            let subClassOf = [];
+            try {
+                subClassOf = isArray(entry["rdfs:subClassOf"])
+                    ? entry["rdfs:subClassOf"].map((e) =>
+                          stripSchemaPath(e["@id"])
+                      )
+                    : [stripSchemaPath(entry["rdfs:subClassOf"]["@id"])];
+            } catch (error) {}
             classes[stripSchemaPath(entry["@id"])] = {
                 metadata: {
                     allowAdditionalProperties: false,
                     help: entry["rdfs:comment"],
                     "@id": entry["@id"],
                     name: entry["rdfs:label"],
-                    subClassOf: isArray(entry["rdfs:subClassOf"])
-                        ? entry["rdfs:subClassOf"].map((e) =>
-                              stripSchemaPath(e["@id"])
-                          )
-                        : [stripSchemaPath(entry["@id"])],
+                    subClassOf,
                 },
                 inputs: [],
                 linksTo: [],
@@ -116,6 +120,7 @@ Object(async () => {
     let index = {};
     Object.keys(classes).forEach(async (c) => {
         const item = classes[c];
+        item.linksTo = uniq(item.linksTo);
         item.inputs = orderBy(item.inputs, "property");
 
         const typeDefinition = path.join(
