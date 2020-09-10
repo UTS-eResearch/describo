@@ -26,7 +26,7 @@ export default class Bag {
 
         let manifest = "";
         for (let item of items) {
-            manifest += `${item.hash} ${item.file}\n`;
+            manifest += `${item.hash} data/${item.file}\n`;
         }
         await fs.writeFile(manifestPath, manifest);
 
