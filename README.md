@@ -1,3 +1,5 @@
+# Development of this application has moved to [https://github.com/Arkisto-Platform/describo](https://github.com/Arkisto-Platform/describo)
+
 > ## **If you're not a developer you should probably get a pre-built bundle from: [https://uts-eresearch.github.io/describo/](https://uts-eresearch.github.io/describo/)**
 
 
